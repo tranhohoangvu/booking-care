@@ -52,6 +52,8 @@ booking-care/
 │   │   │   └── forgot-password/page.tsx# Password reset request
 │   │   ├── auth/callback/route.ts      # OAuth / email verification callback
 │   │   ├── doctor/                     # Protected Doctor Portal
+│   │   │   ├── dashboard/page.tsx      # Consultation KPI metrics & daily patient queue
+│   │   │   ├── appointments/page.tsx   # Patient records, clinical diagnosis & notes workspace
 │   │   │   ├── profile/page.tsx        # Doctor professional profile & credentials editor
 │   │   │   └── schedule/page.tsx       # Daily schedule board, slot toggle & bulk generator
 │   │   ├── doctors/                    # Public Doctor Directory
@@ -74,7 +76,8 @@ booking-care/
 │   │   └── page.tsx                    # Dynamic Landing Page connected to services layer
 │   ├── components/
 │   │   ├── doctor/
-│   │   │   └── DoctorSubnav.tsx        # Doctor portal sub-navigation tabs
+│   │   │   ├── DoctorSubnav.tsx        # Doctor portal sub-navigation tabs
+│   │   │   └── ClinicalNotesModal.tsx  # Clinical consultation notes & diagnosis modal
 │   │   ├── layout/
 │   │   │   ├── Navbar.tsx              # Dynamic session-aware header with role badge
 │   │   │   └── Footer.tsx              # Medical disclaimers & contact info
@@ -185,7 +188,12 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
   - Payment options: Cash at hospital counter (`CASH`) or instant mock online payment (`ONLINE`).
   - Electronic booking receipt (`/booking/success/[id]`) with copyable appointment code, check-in QR code, and preparation guide.
   - Patient appointments management dashboard (`/appointments`) with status tabs (`ALL`, `UPCOMING`, `COMPLETED`, `CANCELLED`) and slot-releasing cancellation modal.
-- [ ] **Sprint 6: Doctor Consultation Dashboard & Medical Notes**
+- [x] **Sprint 6: Doctor Consultation Dashboard & Medical Notes**
+  - Doctor appointments and consultation services (`getDoctorAppointments`, `confirmAppointment`, `completeConsultation`, `rejectDoctorAppointment`, `getDoctorConsultationMetrics`).
+  - Doctor Consultation Dashboard (`/doctor/dashboard`) with real-time KPI cards (Today's queue, Pending reception, Completed, Estimated revenue).
+  - Daily Consultation Queue with interactive date navigation and patient reception status indicators.
+  - Doctor Clinical Notes Modal (`ClinicalNotesModal`) supporting medical diagnoses (`diagnosis`), treatment instructions & prescription notes (`doctor_notes`), and print support.
+  - Doctor Patient Records & Historical Appointments Workspace (`/doctor/appointments`) with status filtering (`ALL`, `PENDING`, `CONFIRMED`, `COMPLETED`, `CANCELLED`), search by patient/code/diagnosis, and doctor cancellation modal.
 - [ ] **Sprint 7: Admin Control Panel & Analytics**
 - [ ] **Sprint 8: Reviews, Realtime Updates & Deployment**
 

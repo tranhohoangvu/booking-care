@@ -15,6 +15,18 @@ export function DoctorSubnav({ title, subtitle }: DoctorSubnavProps) {
 
   const links = [
     {
+      href: '/doctor/dashboard',
+      label: 'Tổng quan & Ca khám',
+      icon: Activity,
+      active: pathname === '/doctor/dashboard',
+    },
+    {
+      href: '/doctor/appointments',
+      label: 'Hồ sơ bệnh án & Lịch hẹn',
+      icon: CalendarCheck2,
+      active: pathname === '/doctor/appointments',
+    },
+    {
       href: '/doctor/schedule',
       label: 'Quản lý lịch khám',
       icon: Calendar,
@@ -25,12 +37,6 @@ export function DoctorSubnav({ title, subtitle }: DoctorSubnavProps) {
       label: 'Hồ sơ chuyên môn',
       icon: UserCheck,
       active: pathname === '/doctor/profile',
-    },
-    {
-      href: '/doctor/appointments',
-      label: 'Lịch hẹn bệnh nhân',
-      icon: CalendarCheck2,
-      active: pathname === '/doctor/appointments',
     },
   ];
 
