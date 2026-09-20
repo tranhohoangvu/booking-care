@@ -50,7 +50,12 @@ booking-care/
 │   │   │   ├── login/page.tsx          # Login with quick role-switcher (Patient, Doctor, Admin)
 │   │   │   ├── register/page.tsx       # Registration with Patient/Doctor role selection
 │   │   │   └── forgot-password/page.tsx# Password reset request
-│   │   ├── auth/callback/route.ts      # OAuth / email verification callback
+│   │   ├── admin/                      # Protected Admin Control Panel
+│   │   │   ├── page.tsx                # Platform KPIs, GMV analytics & activity feed
+│   │   │   ├── specialties/page.tsx    # Medical specialties CRUD
+│   │   │   ├── clinics/page.tsx        # Healthcare facilities & clinics CRUD
+│   │   │   ├── doctors/page.tsx        # Doctor directory CRUD & fee assignment
+│   │   │   └── appointments/page.tsx   # Platform-wide appointment monitor
 │   │   ├── doctor/                     # Protected Doctor Portal
 │   │   │   ├── dashboard/page.tsx      # Consultation KPI metrics & daily patient queue
 │   │   │   ├── appointments/page.tsx   # Patient records, clinical diagnosis & notes workspace
@@ -71,25 +76,34 @@ booking-care/
 │   │   ├── appointments/               # Patient Appointments Dashboard
 │   │   │   └── page.tsx                # Status tabs, receipt view & slot-releasing cancellation
 │   │   ├── profile/page.tsx            # Patient personal profile management
+│   │   ├── not-found.tsx               # Custom branded 404 error page
 │   │   ├── globals.css                 # Custom medical theme & design tokens
 │   │   ├── layout.tsx                  # Root layout with Inter font & Navbar/Footer
 │   │   └── page.tsx                    # Dynamic Landing Page connected to services layer
 │   ├── components/
+│   │   ├── admin/
+│   │   │   └── AdminSubnav.tsx         # Admin control panel sub-navigation tabs
 │   │   ├── doctor/
 │   │   │   ├── DoctorSubnav.tsx        # Doctor portal sub-navigation tabs
 │   │   │   └── ClinicalNotesModal.tsx  # Clinical consultation notes & diagnosis modal
+│   │   ├── notifications/
+│   │   │   └── NotificationBell.tsx    # Live notification bell & dropdown feed
+│   │   ├── reviews/
+│   │   │   └── ReviewModal.tsx         # Verified patient review & rating modal
 │   │   ├── layout/
-│   │   │   ├── Navbar.tsx              # Dynamic session-aware header with role badge
+│   │   │   ├── Navbar.tsx              # Dynamic session-aware header with role badge & bell
 │   │   │   └── Footer.tsx              # Medical disclaimers & contact info
 │   │   └── ui/                         # Reusable UI primitives (Button, Input, Card)
 │   ├── lib/
 │   │   ├── services/                   # Application Data & Business Logic Layer
+│   │   │   ├── admin.ts                # Admin platform stats & master data CRUD
 │   │   │   ├── appointments.ts         # Atomic slot lock, booking & cancellation service
-│   │   │   ├── doctors.ts              # Doctor search, filters, and detail queries
-│   │   │   ├── specialties.ts          # Specialty catalog services
 │   │   │   ├── clinics.ts              # Hospital & clinic catalog services
+│   │   │   ├── doctors.ts              # Doctor search, filters, and detail queries
 │   │   │   ├── profiles.ts             # Patient & Doctor profile CRUD
-│   │   │   └── schedules.ts            # Schedule management, bulk generator & toggling
+│   │   │   ├── reviews.ts              # Verified patient reviews & rating recalculation
+│   │   │   ├── schedules.ts            # Schedule management, bulk generator & toggling
+│   │   │   └── specialties.ts          # Specialty catalog services
 │   │   ├── supabase/
 │   │   │   ├── client.ts               # Browser client with fast offline fallback detection
 │   │   │   ├── server.ts               # Server Supabase client with cookies
@@ -194,8 +208,21 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
   - Daily Consultation Queue with interactive date navigation and patient reception status indicators.
   - Doctor Clinical Notes Modal (`ClinicalNotesModal`) supporting medical diagnoses (`diagnosis`), treatment instructions & prescription notes (`doctor_notes`), and print support.
   - Doctor Patient Records & Historical Appointments Workspace (`/doctor/appointments`) with status filtering (`ALL`, `PENDING`, `CONFIRMED`, `COMPLETED`, `CANCELLED`), search by patient/code/diagnosis, and doctor cancellation modal.
-- [ ] **Sprint 7: Admin Control Panel & Analytics**
-- [ ] **Sprint 8: Reviews, Realtime Updates & Deployment**
+- [x] **Sprint 7: Admin Control Panel & Analytics**
+  - Admin service (`/src/lib/services/admin.ts`) aggregating platform-wide KPI metrics and status distribution.
+  - Admin Control Panel (`/admin`) displaying total patients, active doctors, appointment breakdown, and gross revenue.
+  - Specialties CRUD management (`/admin/specialties`) with image preview, slug generator, and doctor counters.
+  - Clinics & healthcare facilities CRUD management (`/admin/clinics`) with address, phone, and region filters.
+  - Doctors management workspace (`/admin/doctors`) with specialty and hospital assignment, experience, and fee setup.
+  - Platform-wide appointments auditor (`/admin/appointments`) with status filtering and multi-field search.
+  - Dedicated Admin sub-navigation system (`AdminSubnav`).
+- [x] **Sprint 8: Reviews, Realtime Updates & Deployment**
+  - Verified patient reviews service (`/src/lib/services/reviews.ts`) with 1-5 star ratings, feedback comments, and doctor rating recalculation.
+  - Patient Review Modal (`ReviewModal`) integrated on `/appointments` for completed consultations.
+  - Live patient review showcase integrated dynamically into doctor details (`/doctors/[id]`).
+  - Realtime in-app notification system (`NotificationBell`) with unread badge counter, notification dropdown feed, and custom browser event dispatcher.
+  - Custom branded 404 error page (`/not-found.tsx`).
+  - Production build verification: 100% successful static & dynamic route compilation (`next build`).
 
 ---
 

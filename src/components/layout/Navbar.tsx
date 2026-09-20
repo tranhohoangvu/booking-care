@@ -16,6 +16,7 @@ import {
   Stethoscope, 
   PhoneCall
 } from 'lucide-react';
+import { NotificationBell } from '@/components/notifications/NotificationBell';
 import type { UserRole } from '@/types/database.types';
 
 interface AuthUserState {
@@ -214,6 +215,8 @@ export function Navbar() {
             <span className="font-semibold text-gray-900">1900 2805</span>
           </div>
 
+          <NotificationBell />
+
           {loading ? (
             <div className="h-8 w-24 bg-gray-200/60 animate-pulse rounded-full" />
           ) : user ? (
@@ -314,7 +317,8 @@ export function Navbar() {
         </div>
 
         {/* Mobile Toggle */}
-        <div className="flex md:hidden">
+        <div className="flex items-center gap-1 md:hidden">
+          <NotificationBell />
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="p-1.5 text-[oklch(0.28_0.014_250)] hover:text-[oklch(0.2_0.012_250)] rounded-[12px]"

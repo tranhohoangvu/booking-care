@@ -20,6 +20,7 @@ import {
   FileText 
 } from 'lucide-react';
 import { getDoctorById, type DoctorWithDetails } from '@/lib/services/doctors';
+import { getDoctorReviews } from '@/lib/services/reviews';
 import { formatCurrency } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
@@ -63,12 +64,22 @@ function DoctorDetailContent() {
   const [selectedSlot, setSelectedSlot] = useState<string>(initialSlot);
   const [bookingNotice, setBookingNotice] = useState<string | null>(null);
 
+  const [reviewsList, setReviewsList] = useState<any[]>([]);
+
   useEffect(() => {
     async function loadDoctor() {
       if (!doctorId) return;
       try {
-        const data = await getDoctorById(doctorId);
+        const [data, reviews] = await Promise.all([
+          getDoctorById(doctorId),
+          getDoctorReviews(doctorId),
+        ]);
         setDoctor(data);
+        if (reviews && reviews.length > 0) {
+          setReviewsList(reviews);
+        } else if (data?.reviews_list) {
+          setReviewsList(data.reviews_list);
+        }
       } catch (err) {
         console.error('Failed to load doctor profile:', err);
       } finally {
@@ -402,11 +413,13 @@ function DoctorDetailContent() {
             </div>
 
             <div className="space-y-4">
-              {(doctor.reviews_list || []).map((rev) => (
+              {(reviewsList.length > 0 ? reviewsList : (doctor.reviews_list || [])).map((rev: any) => (
                 <div key={rev.id} className="p-4 rounded-2xl bg-white/80 border border-gray-200/70 space-y-2">
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-bold text-[#1a2e24]">{rev.patient_name}</span>
-                    <span className="text-gray-400">{rev.date}</span>
+                    <span className="text-gray-400">
+                      {rev.date || (rev.created_at ? new Date(rev.created_at).toLocaleDateString('vi-VN') : 'Gần đây')}
+                    </span>
                   </div>
                   <div className="flex items-center gap-1">
                     {[1, 2, 3, 4, 5].map((s) => (

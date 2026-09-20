@@ -19,9 +19,11 @@ import {
   X,
   CreditCard,
   Building2,
-  Phone
+  Phone,
+  Star
 } from 'lucide-react';
 import { getPatientAppointments, cancelAppointment, type AppointmentWithDetails } from '@/lib/services/appointments';
+import { ReviewModal } from '@/components/reviews/ReviewModal';
 import { createClient, isSupabaseConfigured } from '@/lib/supabase/client';
 import { formatCurrency } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -40,6 +42,9 @@ export default function PatientAppointmentsPage() {
   const [cancelReason, setCancelReason] = useState('Bận công việc đột xuất');
   const [cancelling, setCancelling] = useState(false);
   const [cancelError, setCancelError] = useState<string | null>(null);
+
+  // Review Modal State
+  const [reviewTarget, setReviewTarget] = useState<AppointmentWithDetails | null>(null);
 
   // Load appointments
   const loadData = async () => {
@@ -385,6 +390,17 @@ export default function PatientAppointmentsPage() {
                       </Button>
                     </Link>
 
+                    {/* Review Button (only for COMPLETED) */}
+                    {apt.status === 'COMPLETED' && (
+                      <Button
+                        variant="outline"
+                        onClick={() => setReviewTarget(apt)}
+                        className="h-9 px-4 rounded-full border-amber-300 bg-amber-50/50 hover:bg-amber-100 text-amber-900 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" /> Đánh giá
+                      </Button>
+                    )}
+
                     {/* Cancel Button (only for PENDING/CONFIRMED) */}
                     {(apt.status === 'PENDING' || apt.status === 'CONFIRMED') && (
                       <Button
@@ -488,6 +504,16 @@ export default function PatientAppointmentsPage() {
             </div>
           </div>
         )}
+
+        {/* Patient Review Modal */}
+        <ReviewModal
+          isOpen={!!reviewTarget}
+          onClose={() => setReviewTarget(null)}
+          appointment={reviewTarget}
+          onSuccess={() => {
+            loadData();
+          }}
+        />
 
       </div>
     </div>
