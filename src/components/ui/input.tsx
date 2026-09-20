@@ -13,15 +13,15 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <div className="w-full">
         <div className="relative flex items-center">
           {icon && (
-            <div className="absolute left-3.5 flex items-center pointer-events-none text-slate-400">
+            <div className="absolute left-3.5 flex items-center pointer-events-none text-[oklch(0.52_0.014_90)]">
               {icon}
             </div>
           )}
           <input
             type={type}
             className={cn(
-              'flex h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm text-slate-900 shadow-sm transition-all placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-4 focus:ring-sky-500/10 disabled:cursor-not-allowed disabled:opacity-50',
-              icon && 'pl-10',
+              'flex h-10 w-full rounded-[12px] border border-[oklch(0.86_0.014_90)] bg-white px-3.5 py-2 text-xs text-[oklch(0.2_0.012_250)] placeholder:text-[oklch(0.52_0.014_90)] transition-all duration-[120ms] focus:border-[oklch(0.54_0.19_240)] focus:outline-none focus:ring-2 focus:ring-[oklch(0.54_0.19_240_/_0.15)] disabled:cursor-not-allowed disabled:opacity-50',
+              icon && 'pl-9',
               error && 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/10',
               className
             )}
@@ -30,7 +30,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           />
         </div>
         {error && (
-          <p className="mt-1.5 text-xs font-medium text-rose-500 flex items-center gap-1">
+          <p className="mt-1 text-[11px] font-medium text-rose-600 flex items-center gap-1">
             <span>•</span> {error}
           </p>
         )}

@@ -50,41 +50,41 @@ export default function ForgotPasswordPage() {
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <div className="flex flex-col items-center mb-6 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-600 text-white shadow-lg shadow-sky-500/25 mb-4">
-            <HeartHandshake className="h-7 w-7" />
+          <div className="flex h-11 w-11 items-center justify-center rounded-[12px] bg-[oklch(0.54_0.19_240)] text-white shadow-xs mb-3.5">
+            <HeartHandshake className="h-6 w-6" strokeWidth={1.75} />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Quên mật khẩu?</h1>
-          <p className="text-sm text-slate-600 mt-1">Nhập email để nhận liên kết thiết lập lại mật khẩu</p>
+          <h1 className="text-2xl font-bold tracking-tight text-[oklch(0.2_0.012_250)]">Quên mật khẩu?</h1>
+          <p className="text-xs sm:text-sm text-[oklch(0.28_0.014_250)] mt-1">Nhập email để nhận liên kết thiết lập lại mật khẩu</p>
         </div>
 
-        <Card className="shadow-lg shadow-slate-100 border-slate-200">
+        <Card className="shadow-[0px_12px_32px_-16px_oklch(0.2_0.012_250_/_0.14),0px_1px_2px_0px_oklch(0.2_0.012_250_/_0.06)] border-[oklch(0.86_0.014_90)] bg-white rounded-[20px]">
           <form onSubmit={handleResetPassword}>
             <CardHeader className="space-y-1">
-              <CardTitle className="text-lg">Khôi phục mật khẩu</CardTitle>
-              <CardDescription>Chúng tôi sẽ gửi liên kết bảo mật về hòm thư của bạn</CardDescription>
+              <CardTitle className="text-base font-bold text-[oklch(0.2_0.012_250)]">Khôi phục mật khẩu</CardTitle>
+              <CardDescription className="text-xs text-[oklch(0.28_0.014_250)]">Chúng tôi sẽ gửi liên kết bảo mật về hòm thư của bạn</CardDescription>
             </CardHeader>
 
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3.5">
               {errorMsg && (
-                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 flex items-start gap-2.5 text-xs text-rose-700">
-                  <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
+                <div className="p-3 rounded-[12px] bg-rose-50 border border-rose-200 flex items-start gap-2 text-xs text-rose-700">
+                  <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" strokeWidth={1.75} />
                   <span>{errorMsg}</span>
                 </div>
               )}
 
               {successMsg && (
-                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start gap-2.5 text-xs text-emerald-700">
-                  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 mt-0.5" />
+                <div className="p-3 rounded-[12px] bg-emerald-50 border border-emerald-200 flex items-start gap-2 text-xs text-emerald-800">
+                  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 mt-0.5" strokeWidth={1.75} />
                   <span>{successMsg}</span>
                 </div>
               )}
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700">Địa chỉ Email đã đăng ký</label>
+                <label className="text-xs font-semibold text-[oklch(0.2_0.012_250)]">Địa chỉ Email đã đăng ký</label>
                 <Input
                   type="email"
                   placeholder="name@example.com"
-                  icon={<Mail className="w-4 h-4" />}
+                  icon={<Mail className="w-4 h-4" strokeWidth={1.75} />}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -92,11 +92,11 @@ export default function ForgotPasswordPage() {
               </div>
             </CardContent>
 
-            <CardFooter className="flex flex-col gap-3">
-              <Button type="submit" className="w-full" disabled={loading}>
+            <CardFooter className="flex flex-col gap-3 pt-2">
+              <Button type="submit" className="w-full h-10 text-xs font-bold rounded-[12px]" disabled={loading}>
                 {loading ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" /> Đang gửi yêu cầu...
+                    <Loader2 className="w-4 h-4 animate-spin" strokeWidth={1.75} /> Đang gửi yêu cầu...
                   </>
                 ) : (
                   'Gửi hướng dẫn'
@@ -105,9 +105,9 @@ export default function ForgotPasswordPage() {
 
               <Link
                 href="/login"
-                className="flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-sky-600 transition-colors"
+                className="flex items-center justify-center gap-1.5 text-xs font-semibold text-[oklch(0.28_0.014_250)] hover:text-[oklch(0.54_0.19_240)] transition-colors"
               >
-                <ArrowLeft className="w-3.5 h-3.5" /> Quay lại đăng nhập
+                <ArrowLeft className="w-3.5 h-3.5" strokeWidth={1.75} /> Quay lại đăng nhập
               </Link>
             </CardFooter>
           </form>

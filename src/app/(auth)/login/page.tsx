@@ -57,27 +57,27 @@ function LoginForm() {
   };
 
   return (
-    <Card className="shadow-lg shadow-slate-100 border-slate-200">
+    <Card className="shadow-[0px_12px_32px_-16px_oklch(0.2_0.012_250_/_0.14),0px_1px_2px_0px_oklch(0.2_0.012_250_/_0.06)] border-[oklch(0.86_0.014_90)] bg-white rounded-[20px]">
       <form onSubmit={handleLogin}>
         <CardHeader className="space-y-1">
-          <CardTitle className="text-lg">Đăng nhập</CardTitle>
-          <CardDescription>Nhập thông tin tài khoản của bạn</CardDescription>
+          <CardTitle className="text-base font-bold text-[oklch(0.2_0.012_250)]">Đăng nhập</CardTitle>
+          <CardDescription className="text-xs text-[oklch(0.28_0.014_250)]">Nhập thông tin tài khoản của bạn</CardDescription>
         </CardHeader>
 
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-3.5">
           {errorMsg && (
-            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 flex items-start gap-2.5 text-xs text-rose-700">
-              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
+            <div className="p-3 rounded-[12px] bg-rose-50 border border-rose-200 flex items-start gap-2 text-xs text-rose-700">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" strokeWidth={1.75} />
               <span>{errorMsg}</span>
             </div>
           )}
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-700">Địa chỉ Email</label>
+            <label className="text-xs font-semibold text-[oklch(0.2_0.012_250)]">Địa chỉ Email</label>
             <Input
               type="email"
               placeholder="name@example.com"
-              icon={<Mail className="w-4 h-4" />}
+              icon={<Mail className="w-4 h-4" strokeWidth={1.75} />}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -86,10 +86,10 @@ function LoginForm() {
 
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-semibold text-slate-700">Mật khẩu</label>
+              <label className="text-xs font-semibold text-[oklch(0.2_0.012_250)]">Mật khẩu</label>
               <Link
                 href="/forgot-password"
-                className="text-xs font-medium text-sky-600 hover:text-sky-700 hover:underline"
+                className="text-xs font-semibold text-[oklch(0.54_0.19_240)] hover:underline"
               >
                 Quên mật khẩu?
               </Link>
@@ -97,7 +97,7 @@ function LoginForm() {
             <Input
               type="password"
               placeholder="••••••••"
-              icon={<Lock className="w-4 h-4" />}
+              icon={<Lock className="w-4 h-4" strokeWidth={1.75} />}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -105,20 +105,20 @@ function LoginForm() {
           </div>
         </CardContent>
 
-        <CardFooter className="flex flex-col gap-3">
-          <Button type="submit" className="w-full" disabled={loading}>
+        <CardFooter className="flex flex-col gap-3 pt-2">
+          <Button type="submit" className="w-full h-10 text-xs font-bold rounded-[12px]" disabled={loading}>
             {loading ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" /> Đang xác thực...
+                <Loader2 className="w-4 h-4 animate-spin" strokeWidth={1.75} /> Đang xác thực...
               </>
             ) : (
               'Đăng nhập ngay'
             )}
           </Button>
 
-          <div className="text-center text-xs text-slate-600">
+          <div className="text-center text-xs text-[oklch(0.28_0.014_250)]">
             Chưa có tài khoản?{' '}
-            <Link href="/register" className="font-semibold text-sky-600 hover:underline">
+            <Link href="/register" className="font-semibold text-[oklch(0.54_0.19_240)] hover:underline">
               Đăng ký tài khoản mới
             </Link>
           </div>
@@ -132,15 +132,15 @@ export default function LoginPage() {
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
-        <div className="flex flex-col items-center mb-8 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-600 text-white shadow-lg shadow-sky-500/25 mb-4">
-            <HeartHandshake className="h-7 w-7" />
+        <div className="flex flex-col items-center mb-6 text-center">
+          <div className="flex h-11 w-11 items-center justify-center rounded-[12px] bg-[oklch(0.54_0.19_240)] text-white shadow-xs mb-3.5">
+            <HeartHandshake className="h-6 w-6" strokeWidth={1.75} />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Chào mừng bạn quay lại</h1>
-          <p className="text-sm text-slate-600 mt-1">Đăng nhập tài khoản để quản lý lịch khám sức khỏe</p>
+          <h1 className="text-2xl font-bold tracking-tight text-[oklch(0.2_0.012_250)]">Chào mừng bạn quay lại</h1>
+          <p className="text-xs sm:text-sm text-[oklch(0.28_0.014_250)] mt-1">Đăng nhập tài khoản để quản lý lịch khám sức khỏe</p>
         </div>
 
-        <Suspense fallback={<div className="h-72 w-full bg-white rounded-2xl border border-slate-200 animate-pulse" />}>
+        <Suspense fallback={<div className="h-72 w-full bg-white rounded-[20px] border border-[oklch(0.86_0.014_90)] animate-pulse" />}>
           <LoginForm />
         </Suspense>
       </div>

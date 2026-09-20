@@ -3,27 +3,29 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[12px] text-xs font-semibold tracking-tight transition-all duration-[120ms] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[oklch(0.54_0.19_240)] focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]',
   {
     variants: {
       variant: {
         default:
-          'bg-sky-600 text-white shadow-sm hover:bg-sky-700 shadow-sky-600/20',
+          'bg-[oklch(0.54_0.19_240)] text-white hover:bg-[oklch(0.48_0.19_240)] shadow-xs',
         destructive:
-          'bg-rose-500 text-white shadow-sm hover:bg-rose-600 shadow-rose-500/20',
+          'bg-[oklch(0.58_0.22_25)] text-white hover:bg-[oklch(0.52_0.22_25)] shadow-xs',
         outline:
-          'border border-slate-200 bg-white text-slate-800 hover:bg-slate-50 hover:border-slate-300',
+          'border border-[oklch(0.86_0.014_90)] bg-white text-[oklch(0.2_0.012_250)] hover:bg-[oklch(0.97_0.012_95)] hover:border-[oklch(0.75_0.02_250)]',
         secondary:
-          'bg-sky-50 text-sky-700 hover:bg-sky-100 font-semibold',
+          'bg-[oklch(0.95_0.04_240)] text-[oklch(0.48_0.19_240)] hover:bg-[oklch(0.91_0.06_240)] font-semibold',
         ghost:
-          'text-slate-700 hover:bg-slate-100 hover:text-slate-900',
-        link: 'text-sky-600 underline-offset-4 hover:underline',
+          'text-[oklch(0.28_0.014_250)] hover:bg-[oklch(0.94_0.016_95)] hover:text-[oklch(0.2_0.012_250)]',
+        pill:
+          'rounded-full bg-[oklch(0.54_0.19_240)] text-white hover:bg-[oklch(0.48_0.19_240)] px-5',
+        link: 'text-[oklch(0.54_0.19_240)] underline-offset-4 hover:underline',
       },
       size: {
-        default: 'h-11 px-5 py-2.5',
-        sm: 'h-9 rounded-lg px-3 text-xs',
-        lg: 'h-12 rounded-xl px-8 text-base font-semibold',
-        icon: 'h-10 w-10',
+        default: 'h-10 px-4 py-2',
+        sm: 'h-8 rounded-[12px] px-3 text-[11px]',
+        lg: 'h-11 rounded-[12px] px-6 text-sm font-semibold',
+        icon: 'h-9 w-9 rounded-[12px]',
       },
     },
     defaultVariants: {

@@ -66,11 +66,9 @@ export default function RegisterPage() {
       }
 
       if (data.session) {
-        // Logged in immediately
         router.push('/');
         router.refresh();
       } else {
-        // Confirmation email sent
         setSuccessMsg('Đăng ký thành công! Vui lòng kiểm tra hộp thư email của bạn để xác thực tài khoản.');
       }
     } catch (err: unknown) {
@@ -85,70 +83,70 @@ export default function RegisterPage() {
     <div className="min-h-[85vh] flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <div className="flex flex-col items-center mb-6 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-600 text-white shadow-lg shadow-sky-500/25 mb-4">
-            <HeartHandshake className="h-7 w-7" />
+          <div className="flex h-11 w-11 items-center justify-center rounded-[12px] bg-[oklch(0.54_0.19_240)] text-white shadow-xs mb-3.5">
+            <HeartHandshake className="h-6 w-6" strokeWidth={1.75} />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Tạo tài khoản mới</h1>
-          <p className="text-sm text-slate-600 mt-1">Đăng ký dễ dàng để trải nghiệm dịch vụ y tế tiện lợi</p>
+          <h1 className="text-2xl font-bold tracking-tight text-[oklch(0.2_0.012_250)]">Tạo tài khoản mới</h1>
+          <p className="text-xs sm:text-sm text-[oklch(0.28_0.014_250)] mt-1">Đăng ký dễ dàng để trải nghiệm dịch vụ y tế tiện lợi</p>
         </div>
 
-        <Card className="shadow-lg shadow-slate-100 border-slate-200">
+        <Card className="shadow-[0px_12px_32px_-16px_oklch(0.2_0.012_250_/_0.14),0px_1px_2px_0px_oklch(0.2_0.012_250_/_0.06)] border-[oklch(0.86_0.014_90)] bg-white rounded-[20px]">
           <form onSubmit={handleRegister}>
             <CardHeader className="space-y-1">
-              <CardTitle className="text-lg">Thông tin đăng ký</CardTitle>
-              <CardDescription>Chọn loại tài khoản và điền thông tin</CardDescription>
+              <CardTitle className="text-base font-bold text-[oklch(0.2_0.012_250)]">Thông tin đăng ký</CardTitle>
+              <CardDescription className="text-xs text-[oklch(0.28_0.014_250)]">Chọn loại tài khoản và điền thông tin</CardDescription>
             </CardHeader>
 
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3.5">
               {errorMsg && (
-                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 flex items-start gap-2.5 text-xs text-rose-700">
-                  <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
+                <div className="p-3 rounded-[12px] bg-rose-50 border border-rose-200 flex items-start gap-2 text-xs text-rose-700">
+                  <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" strokeWidth={1.75} />
                   <span>{errorMsg}</span>
                 </div>
               )}
 
               {successMsg && (
-                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start gap-2.5 text-xs text-emerald-700">
-                  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 mt-0.5" />
+                <div className="p-3 rounded-[12px] bg-emerald-50 border border-emerald-200 flex items-start gap-2 text-xs text-emerald-800">
+                  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 mt-0.5" strokeWidth={1.75} />
                   <span>{successMsg}</span>
                 </div>
               )}
 
-              {/* Role Picker */}
+              {/* Role Picker - Hallmark 12px radius & 120ms duration */}
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700">Bạn là:</label>
-                <div className="grid grid-cols-2 gap-3">
+                <label className="text-xs font-semibold text-[oklch(0.2_0.012_250)]">Bạn là:</label>
+                <div className="grid grid-cols-2 gap-2.5">
                   <button
                     type="button"
                     onClick={() => setRole('PATIENT')}
-                    className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border text-xs font-semibold transition-all ${
+                    className={`flex items-center justify-center gap-1.5 py-2 px-3 rounded-[12px] border text-xs font-bold transition-all duration-[120ms] active:scale-[0.98] ${
                       role === 'PATIENT'
-                        ? 'border-sky-600 bg-sky-50 text-sky-700 shadow-sm'
-                        : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                        ? 'border-[oklch(0.54_0.19_240)] bg-[oklch(0.95_0.04_240)] text-[oklch(0.48_0.19_240)]'
+                        : 'border-[oklch(0.86_0.014_90)] text-[oklch(0.28_0.014_250)] hover:bg-[oklch(0.97_0.012_95)]'
                     }`}
                   >
-                    <UserCheck className="w-4 h-4" /> Bệnh nhân
+                    <UserCheck className="w-3.5 h-3.5" strokeWidth={1.75} /> Bệnh nhân
                   </button>
                   <button
                     type="button"
                     onClick={() => setRole('DOCTOR')}
-                    className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border text-xs font-semibold transition-all ${
+                    className={`flex items-center justify-center gap-1.5 py-2 px-3 rounded-[12px] border text-xs font-bold transition-all duration-[120ms] active:scale-[0.98] ${
                       role === 'DOCTOR'
-                        ? 'border-sky-600 bg-sky-50 text-sky-700 shadow-sm'
-                        : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                        ? 'border-[oklch(0.54_0.19_240)] bg-[oklch(0.95_0.04_240)] text-[oklch(0.48_0.19_240)]'
+                        : 'border-[oklch(0.86_0.014_90)] text-[oklch(0.28_0.014_250)] hover:bg-[oklch(0.97_0.012_95)]'
                     }`}
                   >
-                    <Stethoscope className="w-4 h-4" /> Bác sĩ
+                    <Stethoscope className="w-3.5 h-3.5" strokeWidth={1.75} /> Bác sĩ
                   </button>
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700">Họ và tên *</label>
+                <label className="text-xs font-semibold text-[oklch(0.2_0.012_250)]">Họ và tên *</label>
                 <Input
                   type="text"
                   placeholder="Nguyễn Văn A"
-                  icon={<User className="w-4 h-4" />}
+                  icon={<User className="w-4 h-4" strokeWidth={1.75} />}
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required
@@ -156,11 +154,11 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700">Địa chỉ Email *</label>
+                <label className="text-xs font-semibold text-[oklch(0.2_0.012_250)]">Địa chỉ Email *</label>
                 <Input
                   type="email"
                   placeholder="name@example.com"
-                  icon={<Mail className="w-4 h-4" />}
+                  icon={<Mail className="w-4 h-4" strokeWidth={1.75} />}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -168,22 +166,22 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700">Số điện thoại</label>
+                <label className="text-xs font-semibold text-[oklch(0.2_0.012_250)]">Số điện thoại</label>
                 <Input
                   type="tel"
                   placeholder="0912 345 678"
-                  icon={<Phone className="w-4 h-4" />}
+                  icon={<Phone className="w-4 h-4" strokeWidth={1.75} />}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700">Mật khẩu *</label>
+                <label className="text-xs font-semibold text-[oklch(0.2_0.012_250)]">Mật khẩu *</label>
                 <Input
                   type="password"
                   placeholder="Tối thiểu 6 ký tự"
-                  icon={<Lock className="w-4 h-4" />}
+                  icon={<Lock className="w-4 h-4" strokeWidth={1.75} />}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -191,11 +189,11 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700">Xác nhận mật khẩu *</label>
+                <label className="text-xs font-semibold text-[oklch(0.2_0.012_250)]">Xác nhận mật khẩu *</label>
                 <Input
                   type="password"
                   placeholder="Nhập lại mật khẩu"
-                  icon={<Lock className="w-4 h-4" />}
+                  icon={<Lock className="w-4 h-4" strokeWidth={1.75} />}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
@@ -203,20 +201,20 @@ export default function RegisterPage() {
               </div>
             </CardContent>
 
-            <CardFooter className="flex flex-col gap-3">
-              <Button type="submit" className="w-full" disabled={loading}>
+            <CardFooter className="flex flex-col gap-3 pt-2">
+              <Button type="submit" className="w-full h-10 text-xs font-bold rounded-[12px]" disabled={loading}>
                 {loading ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" /> Đang tạo tài khoản...
+                    <Loader2 className="w-4 h-4 animate-spin" strokeWidth={1.75} /> Đang tạo tài khoản...
                   </>
                 ) : (
                   'Đăng ký tài khoản'
                 )}
               </Button>
 
-              <div className="text-center text-xs text-slate-600">
+              <div className="text-center text-xs text-[oklch(0.28_0.014_250)]">
                 Đã có tài khoản?{' '}
-                <Link href="/login" className="font-semibold text-sky-600 hover:underline">
+                <Link href="/login" className="font-semibold text-[oklch(0.54_0.19_240)] hover:underline">
                   Đăng nhập tại đây
                 </Link>
               </div>
