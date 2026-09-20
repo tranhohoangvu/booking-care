@@ -40,7 +40,7 @@ export async function updateSession(request: NextRequest) {
     }
 
     // Protect Doctor routes
-    if (pathname.startsWith('/doctor')) {
+    if (pathname === '/doctor' || pathname.startsWith('/doctor/')) {
       if (!demoRole) {
         const url = request.nextUrl.clone();
         url.pathname = '/login';
@@ -113,7 +113,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Protect Doctor routes
-  if (pathname.startsWith('/doctor')) {
+  if (pathname === '/doctor' || pathname.startsWith('/doctor/')) {
     if (!user) {
       const url = request.nextUrl.clone();
       url.pathname = '/login';
