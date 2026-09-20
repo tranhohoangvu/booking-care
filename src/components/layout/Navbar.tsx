@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { 
   HeartHandshake, 
@@ -35,89 +35,121 @@ export function Navbar() {
 
   const supabase = createClient();
 
-  useEffect(() => {
-    async function loadUser() {
+  // Load user session
+  const loadUser = async () => {
+    // 1. Check demo user cookie first (0ms instantaneous sync)
+    const demoCookie = typeof document !== 'undefined'
+      ? document.cookie.split('; ').find((row) => row.startsWith('bookingcare_demo_user='))
+      : null;
+
+    if (demoCookie) {
       try {
-        const { data: { user: authUser } } = await supabase.auth.getUser();
-        if (authUser) {
-          const { data: userData } = await supabase
-            .from('users')
-            .select('role')
-            .eq('id', authUser.id)
-            .single();
-
-          let fullName = authUser.user_metadata?.full_name || authUser.email?.split('@')[0];
-
-          if (userData?.role === 'DOCTOR') {
-            const { data: docData } = await supabase
-              .from('doctor_profiles')
-              .select('full_name')
-              .eq('user_id', authUser.id)
-              .single();
-            if (docData?.full_name) fullName = docData.full_name;
-          } else if (userData?.role === 'PATIENT') {
-            const { data: patientData } = await supabase
-              .from('patient_profiles')
-              .select('full_name')
-              .eq('user_id', authUser.id)
-              .single();
-            if (patientData?.full_name) fullName = patientData.full_name;
-          }
-
-          setUser({
-            id: authUser.id,
-            email: authUser.email || '',
-            role: (userData?.role as UserRole) || 'PATIENT',
-            fullName,
-          });
-        } else {
-          // Check demo user cookie for local/offline testing
-          const demoCookie = typeof document !== 'undefined'
-            ? document.cookie.split('; ').find((row) => row.startsWith('bookingcare_demo_user='))
-            : null;
-
-          if (demoCookie) {
-            try {
-              const parsed = JSON.parse(decodeURIComponent(demoCookie.split('=')[1]));
-              setUser({
-                id: parsed.id,
-                email: parsed.email,
-                role: parsed.role,
-                fullName: parsed.fullName,
-              });
-            } catch {
-              setUser(null);
-            }
-          } else {
-            setUser(null);
-          }
-        }
-      } catch (err) {
-        console.error('Error loading user session:', err);
-      } finally {
+        const parsed = JSON.parse(decodeURIComponent(demoCookie.split('=')[1]));
+        setUser({
+          id: parsed.id,
+          email: parsed.email,
+          role: parsed.role,
+          fullName: parsed.fullName,
+        });
         setLoading(false);
+        return;
+      } catch {
+        // fall through
       }
     }
 
+    // 2. If Supabase credentials are not configured, don't wait for network timeout
+    if (!isSupabaseConfigured()) {
+      setUser(null);
+      setLoading(false);
+      return;
+    }
+
+    // 3. Real Supabase auth session check
+    try {
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (authUser) {
+        const { data: userData } = await supabase
+          .from('users')
+          .select('role')
+          .eq('id', authUser.id)
+          .single();
+
+        let fullName = authUser.user_metadata?.full_name || authUser.email?.split('@')[0];
+
+        if (userData?.role === 'DOCTOR') {
+          const { data: docData } = await supabase
+            .from('doctor_profiles')
+            .select('full_name')
+            .eq('user_id', authUser.id)
+            .single();
+          if (docData?.full_name) fullName = docData.full_name;
+        } else if (userData?.role === 'PATIENT') {
+          const { data: patientData } = await supabase
+            .from('patient_profiles')
+            .select('full_name')
+            .eq('user_id', authUser.id)
+            .single();
+          if (patientData?.full_name) fullName = patientData.full_name;
+        }
+
+        setUser({
+          id: authUser.id,
+          email: authUser.email || '',
+          role: (userData?.role as UserRole) || 'PATIENT',
+          fullName,
+        });
+      } else {
+        setUser(null);
+      }
+    } catch (err) {
+      console.error('Error loading user session:', err);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     loadUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+    // Listen to custom auth events for cross-component instant sync
+    const handleCustomAuthChange = () => {
       loadUser();
-    });
+    };
+    if (typeof window !== 'undefined') {
+      window.addEventListener('bookingcare_auth_change', handleCustomAuthChange);
+    }
+
+    let subscription: { unsubscribe: () => void } | null = null;
+    if (isSupabaseConfigured()) {
+      const { data } = supabase.auth.onAuthStateChange(() => {
+        loadUser();
+      });
+      subscription = data.subscription;
+    }
 
     return () => {
-      subscription.unsubscribe();
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('bookingcare_auth_change', handleCustomAuthChange);
+      }
+      if (subscription) subscription.unsubscribe();
     };
-  }, []);
+  }, [pathname]);
 
   const handleLogout = async () => {
     // Clear demo cookie
     if (typeof document !== 'undefined') {
       document.cookie = 'bookingcare_demo_user=; path=/; max-age=0';
     }
-    await supabase.auth.signOut();
+    if (isSupabaseConfigured()) {
+      await supabase.auth.signOut();
+    }
     setUser(null);
     setIsDropdownOpen(false);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('bookingcare_auth_change'));
+    }
     router.push('/');
     router.refresh();
   };

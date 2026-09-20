@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -46,6 +46,23 @@ export default function RegisterPage() {
       return;
     }
 
+    // Offline / Demo fallback if Supabase is not configured
+    if (!isSupabaseConfigured()) {
+      const demoPayload = {
+        id: `demo-${role.toLowerCase()}-${Date.now()}`,
+        email,
+        role,
+        fullName,
+      };
+      document.cookie = `bookingcare_demo_user=${encodeURIComponent(JSON.stringify(demoPayload))}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`;
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('bookingcare_auth_change'));
+      }
+      router.push(role === 'DOCTOR' ? '/doctor/profile' : '/profile');
+      router.refresh();
+      return;
+    }
+
     setLoading(true);
     try {
       const { data, error } = await supabase.auth.signUp({
@@ -66,6 +83,9 @@ export default function RegisterPage() {
       }
 
       if (data.session) {
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new Event('bookingcare_auth_change'));
+        }
         router.push('/');
         router.refresh();
       } else {

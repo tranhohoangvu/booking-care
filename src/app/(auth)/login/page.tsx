@@ -3,7 +3,7 @@
 import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -30,6 +30,19 @@ function LoginForm() {
       return;
     }
 
+    // If in demo / offline mode without real Supabase credentials:
+    if (!isSupabaseConfigured()) {
+      let role: 'PATIENT' | 'DOCTOR' | 'ADMIN' = 'PATIENT';
+      const lowerEmail = email.toLowerCase();
+      if (lowerEmail.includes('doctor') || lowerEmail.includes('bacsi') || lowerEmail.includes('bs')) {
+        role = 'DOCTOR';
+      } else if (lowerEmail.includes('admin')) {
+        role = 'ADMIN';
+      }
+      handleDemoLogin(role, email.split('@')[0], email);
+      return;
+    }
+
     setLoading(true);
     try {
       const { error } = await supabase.auth.signInWithPassword({
@@ -44,6 +57,10 @@ function LoginForm() {
           setErrorMsg(error.message);
         }
         return;
+      }
+
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('bookingcare_auth_change'));
       }
 
       router.push(redirectPath);
@@ -66,10 +83,15 @@ function LoginForm() {
     // Set cookie for 7 days
     document.cookie = `bookingcare_demo_user=${encodeURIComponent(JSON.stringify(demoPayload))}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`;
     
+    // Notify Navbar and other components immediately
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('bookingcare_auth_change'));
+    }
+
     // Auto redirect based on role or searchParams
     let target = redirectPath;
     if (target === '/') {
-      if (role === 'DOCTOR') target = '/doctor/profile';
+      if (role === 'DOCTOR') target = '/doctor/schedule';
       else if (role === 'ADMIN') target = '/admin';
       else target = '/profile';
     }
