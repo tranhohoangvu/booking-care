@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/client';
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client';
 import type { Specialty, DoctorProfile } from '@/types/database.types';
 
 export interface SpecialtyWithCount extends Specialty {
@@ -81,6 +81,10 @@ export const MOCK_SPECIALTIES: SpecialtyWithCount[] = [
 ];
 
 export async function getAllSpecialties(): Promise<SpecialtyWithCount[]> {
+  if (!isSupabaseConfigured()) {
+    return MOCK_SPECIALTIES;
+  }
+
   try {
     const supabase = createClient();
     const { data, error } = await supabase
@@ -110,6 +114,14 @@ export async function getSpecialtyBySlug(slug: string): Promise<{
   specialty: SpecialtyWithCount | null;
   doctors: DoctorProfile[];
 }> {
+  if (!isSupabaseConfigured()) {
+    const mock = MOCK_SPECIALTIES.find((s) => s.slug === slug) || null;
+    return {
+      specialty: mock,
+      doctors: mock ? getMockDoctorsForSpecialty(mock.name) : [],
+    };
+  }
+
   try {
     const supabase = createClient();
     const { data: specialtyData, error } = await supabase

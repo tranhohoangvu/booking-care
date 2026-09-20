@@ -23,97 +23,55 @@ import {
   CalendarCheck2
 } from 'lucide-react';
 
-const specialties = [
-  { 
-    name: 'Cơ Xương Khớp', 
-    slug: 'co-xuong-khop', 
-    icon: <Activity className="w-5 h-5 text-[#22c55e]" strokeWidth={2} />, 
-    doctors: 45, 
-    desc: 'Điều trị thoái hóa cột sống, viêm khớp dạng thấp, chấn thương dây chằng thể thao.',
-    badge: 'Chuyên khoa mũi nhọn'
-  },
-  { 
-    name: 'Tim Mạch & Mạch Máu', 
-    slug: 'tim-mach', 
-    icon: <Heart className="w-5 h-5 text-rose-500" strokeWidth={2} />, 
-    doctors: 32, 
-    desc: 'Tầm soát rối loạn nhịp tim, suy tim, tăng huyết áp, can thiệp mạch vành chuyên sâu.',
-    badge: 'Kỹ thuật cao'
-  },
-  { 
-    name: 'Thần Kinh & Đột Quỵ', 
-    slug: 'than-kinh', 
-    icon: <Zap className="w-5 h-5 text-amber-500" strokeWidth={2} />, 
-    doctors: 28, 
-    desc: 'Khám đau nửa đầu mãn tính, rối loạn tiền đình, di chứng sau tai biến mạch máu não.' 
-  },
-  { 
-    name: 'Tiêu Hóa & Gan Mật', 
-    slug: 'tieu-hoa-gan-mat', 
-    icon: <Sparkles className="w-5 h-5 text-emerald-600" strokeWidth={2} />, 
-    doctors: 39, 
-    desc: 'Nội soi dạ dày không đau, điều trị trĩ, viêm gan B-C, tầm soát ung thư sớm.' 
-  },
-  { 
-    name: 'Tai Mũi Họng', 
-    slug: 'tai-mui-hong', 
-    icon: <Smile className="w-5 h-5 text-teal-600" strokeWidth={2} />, 
-    doctors: 30, 
-    desc: 'Nội soi ống mềm phát hiện sớm ung thư vòm họng, viêm xoang và amidan hốc mủ.' 
-  },
-  { 
-    name: 'Da Liễu & Thẩm Mỹ', 
-    slug: 'da-lieu', 
-    icon: <Heart className="w-5 h-5 text-indigo-500" strokeWidth={2} />, 
-    doctors: 25, 
-    desc: 'Điều trị mụn viêm, chàm cơ địa, vảy nến, trẻ hóa và phục hồi tế bào da liễu.' 
-  },
-];
+import { getAllSpecialties, type SpecialtyWithCount } from '@/lib/services/specialties';
+import { searchDoctors, type DoctorWithDetails } from '@/lib/services/doctors';
+import { getAllClinics, type ClinicWithStats } from '@/lib/services/clinics';
 
-const featuredDoctors = [
-  {
-    name: 'PGS.TS.BS Nguyễn Văn Liệu',
-    degree: 'Phó Giáo sư, Tiến sĩ, Bác sĩ',
-    specialty: 'Thần kinh & Cơ Xương Khớp',
-    hospital: 'Bệnh viện Đại học Y Dược TP.HCM',
-    avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&auto=format&fit=crop&q=80',
-    fee: 350000,
-    slots: ['08:30', '09:00', '10:30'],
-  },
-  {
-    name: 'ThS.BSCKII Trần Thị Mai Hương',
-    degree: 'Thạc sĩ, Bác sĩ Chuyên khoa II',
-    specialty: 'Tim Mạch Can Thiệp',
-    hospital: 'Bệnh viện Chợ Rẫy',
-    avatar: 'https://images.unsplash.com/photo-1594824813581-2292f7e025ff?w=600&auto=format&fit=crop&q=80',
-    fee: 300000,
-    slots: ['13:30', '14:30', '15:30'],
-  },
-  {
-    name: 'TS.BS Lê Hoàng Nam',
-    degree: 'Tiến sĩ, Giảng viên Y khoa',
-    specialty: 'Tiêu Hóa & Nội Soi Can Thiệp',
-    hospital: 'Phòng khám Đa khoa Quốc tế CarePlus',
-    avatar: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=600&auto=format&fit=crop&q=80',
-    fee: 280000,
-    slots: ['09:30', '11:00', '14:00'],
-  },
-];
-
-const hospitalPartners = [
-  'Bệnh viện Chợ Rẫy',
-  'BV Đại học Y Dược TP.HCM',
-  'Bệnh viện Bạch Mai',
-  'BV Tai Mũi Họng TW',
-  'Phòng khám Quốc tế CarePlus',
-  'BV Đa khoa Hồng Ngọc'
-];
+function getSpecialtyIcon(slug: string) {
+  switch (slug) {
+    case 'tim-mach':
+      return <Heart className="w-5 h-5 text-rose-500" strokeWidth={2} />;
+    case 'than-kinh':
+      return <Zap className="w-5 h-5 text-amber-500" strokeWidth={2} />;
+    case 'tieu-hoa-gan-mat':
+      return <Sparkles className="w-5 h-5 text-emerald-600" strokeWidth={2} />;
+    case 'tai-mui-hong':
+      return <Smile className="w-5 h-5 text-teal-600" strokeWidth={2} />;
+    case 'da-lieu':
+      return <Heart className="w-5 h-5 text-indigo-500" strokeWidth={2} />;
+    default:
+      return <Activity className="w-5 h-5 text-[#22c55e]" strokeWidth={2} />;
+  }
+}
 
 export default function HomePage() {
   const router = useRouter();
   const [searchKeyword, setSearchKeyword] = useState('');
   const [activeSlot, setActiveSlot] = useState<string>('08:30');
   const [isSubheadlineAnimated, setIsSubheadlineAnimated] = useState(false);
+
+  // Dynamic state loaded from Database/Service
+  const [specialtiesList, setSpecialtiesList] = useState<SpecialtyWithCount[]>([]);
+  const [featuredDoctorsList, setFeaturedDoctorsList] = useState<DoctorWithDetails[]>([]);
+  const [clinicsList, setClinicsList] = useState<ClinicWithStats[]>([]);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [specs, docs, clns] = await Promise.all([
+          getAllSpecialties(),
+          searchDoctors(),
+          getAllClinics(),
+        ]);
+        setSpecialtiesList(specs);
+        setFeaturedDoctorsList(docs.slice(0, 3));
+        setClinicsList(clns);
+      } catch (err) {
+        console.error('Error loading homepage data:', err);
+      }
+    }
+    loadData();
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -255,11 +213,18 @@ export default function HomePage() {
               <span>Đối tác y tế liên kết:</span>
             </div>
             <div className="flex flex-wrap items-center justify-center md:justify-end gap-x-6 gap-y-2.5 text-xs font-semibold text-gray-700">
-              {hospitalPartners.map((hospital) => (
-                <div key={hospital} className="flex items-center gap-1.5 hover:text-[#22c55e] transition-colors cursor-pointer">
+              {(clinicsList.length > 0 ? clinicsList.map((c) => c.name) : [
+                'Bệnh viện Chợ Rẫy',
+                'BV Đại học Y Dược TP.HCM',
+                'Bệnh viện Bạch Mai',
+                'BV Tai Mũi Họng TW',
+                'Phòng khám Quốc tế CarePlus',
+                'BV Đa khoa Hồng Ngọc'
+              ]).map((hospital) => (
+                <Link key={hospital} href="/clinics" className="flex items-center gap-1.5 hover:text-[#22c55e] transition-colors cursor-pointer">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e]/60" />
                   <span>{hospital}</span>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -287,21 +252,21 @@ export default function HomePage() {
               <div className="flex gap-4 items-start pt-1">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=200&auto=format&fit=crop&q=80"
-                  alt="PGS.TS Nguyễn Văn Liệu"
+                  src={featuredDoctorsList[0]?.avatar_url || "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=200&auto=format&fit=crop&q=80"}
+                  alt={featuredDoctorsList[0]?.full_name || "Bác sĩ tiêu biểu"}
                   className="w-16 h-16 rounded-[16px] object-cover border border-white shadow-xs shrink-0"
                 />
                 <div className="space-y-0.5">
                   <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wide">
-                    Bác sĩ tiêu biểu
+                    {featuredDoctorsList[0]?.degree || "Bác sĩ tiêu biểu"}
                   </span>
                   <h3 className="font-bold text-base text-[#1a2e24] leading-tight">
-                    PGS.TS.BS Nguyễn Văn Liệu
+                    {featuredDoctorsList[0]?.full_name || "PGS.TS.BS Nguyễn Văn Liệu"}
                   </h3>
-                  <p className="text-xs text-gray-600">Chuyên khoa Thần kinh & Cột sống</p>
+                  <p className="text-xs text-gray-600">{featuredDoctorsList[0]?.specialty?.name || "Chuyên khoa Thần kinh & Cột sống"}</p>
                   <p className="text-[11px] text-gray-500 flex items-center gap-1 mt-0.5">
                     <MapPin className="w-3 h-3 text-[#22c55e]" />
-                    <span>BV Đại học Y Dược TP.HCM</span>
+                    <span>{featuredDoctorsList[0]?.clinic?.name || "BV Đại học Y Dược TP.HCM"}</span>
                   </p>
                 </div>
               </div>
@@ -316,7 +281,7 @@ export default function HomePage() {
                 </div>
 
                 <div className="grid grid-cols-3 gap-2">
-                  {['08:30', '09:00', '10:30'].map((slot) => (
+                  {(featuredDoctorsList[0]?.available_slots || ['08:30', '09:00', '10:30']).slice(0, 3).map((slot) => (
                     <button
                       key={slot}
                       type="button"
@@ -337,10 +302,12 @@ export default function HomePage() {
               <div className="pt-3 border-t border-gray-200/60 flex items-center justify-between">
                 <div>
                   <span className="text-[11px] text-gray-500 block">Giá khám niêm yết</span>
-                  <span className="text-base font-bold text-[#1a2e24]">{formatCurrency(350000)}</span>
+                  <span className="text-base font-bold text-[#1a2e24]">
+                    {formatCurrency(featuredDoctorsList[0]?.consultation_fee || 350000)}
+                  </span>
                 </div>
 
-                <Link href="/doctors">
+                <Link href={featuredDoctorsList[0] ? `/doctors/${featuredDoctorsList[0].id}?slot=${activeSlot}` : '/doctors'}>
                   <Button size="sm" className="h-9 px-5 text-xs font-semibold rounded-full bg-[#22c55e] hover:bg-[#16a34a] text-white shadow-xs">
                     Đặt lịch ngay <ChevronRight className="w-3.5 h-3.5 ml-1" />
                   </Button>
@@ -364,32 +331,27 @@ export default function HomePage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {specialties.slice(0, 4).map((spec) => (
+              {specialtiesList.slice(0, 4).map((spec) => (
                 <Link key={spec.slug} href={`/specialties/${spec.slug}`} className="group">
                   <div className="glass-card rounded-[20px] p-5 h-full flex flex-col justify-between">
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
                         <div className="w-10 h-10 rounded-xl bg-white/90 shadow-xs flex items-center justify-center border border-gray-200">
-                          {spec.icon}
+                          {getSpecialtyIcon(spec.slug)}
                         </div>
-                        {spec.badge && (
-                          <span className="px-2.5 py-0.5 rounded-full bg-white/80 text-[#22c55e] border border-gray-200 text-[10px] font-bold">
-                            {spec.badge}
-                          </span>
-                        )}
                       </div>
                       <div>
                         <h3 className="font-bold text-sm text-[#1a2e24] group-hover:text-[#22c55e] transition-colors">
                           {spec.name}
                         </h3>
                         <p className="text-xs text-gray-600 mt-1 line-clamp-2 leading-relaxed">
-                          {spec.desc}
+                          {spec.description || 'Chuyên khoa thăm khám và điều trị chuyên sâu.'}
                         </p>
                       </div>
                     </div>
 
                     <div className="pt-3 mt-3 border-t border-gray-200/50 flex items-center justify-between text-xs">
-                      <span className="text-gray-500">{spec.doctors} Bác sĩ</span>
+                      <span className="text-gray-500">{spec.doctor_count || 15} Bác sĩ</span>
                       <span className="font-semibold text-[#22c55e] flex items-center gap-0.5">
                         Xem lịch <ChevronRight className="w-3.5 h-3.5" />
                       </span>
@@ -418,24 +380,24 @@ export default function HomePage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {featuredDoctors.map((doc) => (
-            <div key={doc.name} className="glass-card rounded-[24px] p-6 flex flex-col justify-between">
+          {featuredDoctorsList.map((doc) => (
+            <div key={doc.id} className="glass-card rounded-[24px] p-6 flex flex-col justify-between">
               <div className="space-y-4">
                 {/* Doctor Headshot & Degree */}
                 <div className="flex gap-3.5 items-start">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={doc.avatar}
-                    alt={doc.name}
+                    src={doc.avatar_url || "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=200&auto=format&fit=crop&q=80"}
+                    alt={doc.full_name}
                     className="w-16 h-16 rounded-[16px] object-cover border border-white shadow-xs shrink-0"
                   />
                   <div className="space-y-0.5">
-                    <span className="text-[10px] font-bold text-[#22c55e] uppercase">{doc.degree}</span>
-                    <h3 className="font-bold text-sm text-[#1a2e24] leading-tight">{doc.name}</h3>
-                    <p className="text-xs font-medium text-gray-700">{doc.specialty}</p>
+                    <span className="text-[10px] font-bold text-[#22c55e] uppercase">{doc.degree || 'Bác sĩ'}</span>
+                    <h3 className="font-bold text-sm text-[#1a2e24] leading-tight">{doc.full_name}</h3>
+                    <p className="text-xs font-medium text-gray-700">{doc.specialty?.name || 'Chuyên khoa'}</p>
                     <p className="text-[11px] text-gray-500 flex items-center gap-1">
                       <MapPin className="w-3 h-3 text-gray-400 shrink-0" />
-                      <span className="truncate">{doc.hospital}</span>
+                      <span className="truncate">{doc.clinic?.name || 'Cơ sở y tế'}</span>
                     </p>
                   </div>
                 </div>
@@ -446,14 +408,14 @@ export default function HomePage() {
                     <Clock className="w-3 h-3 text-[#22c55e]" strokeWidth={2} /> Khung giờ khám hôm nay:
                   </span>
                   <div className="flex gap-2">
-                    {doc.slots.map((slot) => (
-                      <button
+                    {(doc.available_slots || ['08:30', '09:00', '10:30']).slice(0, 3).map((slot) => (
+                      <Link
                         key={slot}
-                        type="button"
-                        className="flex-1 py-1 px-2 rounded-lg bg-white/80 hover:bg-[#22c55e] hover:text-white border border-gray-200 text-gray-800 font-bold text-xs transition-colors active:scale-[0.98]"
+                        href={`/doctors/${doc.id}?slot=${slot}`}
+                        className="flex-1 py-1 px-2 text-center rounded-lg bg-white/80 hover:bg-[#22c55e] hover:text-white border border-gray-200 text-gray-800 font-bold text-xs transition-colors active:scale-[0.98]"
                       >
                         {slot}
-                      </button>
+                      </Link>
                     ))}
                   </div>
                 </div>
@@ -463,9 +425,9 @@ export default function HomePage() {
               <div className="pt-4 mt-4 border-t border-gray-200/60 flex items-center justify-between">
                 <div>
                   <span className="text-[10px] text-gray-500 block">Giá khám</span>
-                  <span className="text-sm font-bold text-[#1a2e24]">{formatCurrency(doc.fee)}</span>
+                  <span className="text-sm font-bold text-[#1a2e24]">{formatCurrency(doc.consultation_fee)}</span>
                 </div>
-                <Link href="/doctors">
+                <Link href={`/doctors/${doc.id}`}>
                   <Button size="sm" variant="outline" className="h-8 px-3.5 text-xs font-semibold rounded-full border-gray-300 hover:border-[#22c55e] hover:text-[#22c55e] transition-colors">
                     Chi tiết & Đặt hẹn
                   </Button>

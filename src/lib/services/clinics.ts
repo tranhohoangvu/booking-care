@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/client';
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client';
 import type { Clinic, DoctorProfile } from '@/types/database.types';
 
 export interface ClinicWithStats extends Clinic {
@@ -58,6 +58,10 @@ export const MOCK_CLINICS: ClinicWithStats[] = [
 ];
 
 export async function getAllClinics(): Promise<ClinicWithStats[]> {
+  if (!isSupabaseConfigured()) {
+    return MOCK_CLINICS;
+  }
+
   try {
     const supabase = createClient();
     const { data, error } = await supabase
@@ -90,6 +94,14 @@ export async function getClinicBySlug(slug: string): Promise<{
   clinic: ClinicWithStats | null;
   doctors: DoctorProfile[];
 }> {
+  if (!isSupabaseConfigured()) {
+    const mock = MOCK_CLINICS.find((c) => c.slug === slug) || null;
+    return {
+      clinic: mock,
+      doctors: mock ? getMockDoctorsForClinic(mock.id, mock.name) : [],
+    };
+  }
+
   try {
     const supabase = createClient();
     const { data: clinicData, error } = await supabase

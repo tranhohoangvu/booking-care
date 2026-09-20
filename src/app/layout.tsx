@@ -42,6 +42,7 @@ export default function RootLayout({
             loop
             muted
             playsInline
+            preload="metadata"
             src="https://cdn.sceneai.art/Hero%20Section%20Video/aa476a86-3c53-4229-b946-84f699108e53.mp4"
           />
         </div>

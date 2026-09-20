@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/client';
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client';
 import type { DoctorProfile, Specialty, Clinic } from '@/types/database.types';
 
 export interface DoctorFilterParams {
@@ -289,6 +289,10 @@ export const MOCK_DOCTORS: DoctorWithDetails[] = [
 ];
 
 export async function searchDoctors(filters: DoctorFilterParams = {}): Promise<DoctorWithDetails[]> {
+  if (!isSupabaseConfigured()) {
+    return applyLocalDoctorFilters(MOCK_DOCTORS, filters);
+  }
+
   try {
     const supabase = createClient();
     let query = supabase
@@ -321,6 +325,10 @@ export async function searchDoctors(filters: DoctorFilterParams = {}): Promise<D
 }
 
 export async function getDoctorById(id: string): Promise<DoctorWithDetails | null> {
+  if (!isSupabaseConfigured()) {
+    return MOCK_DOCTORS.find((d) => d.id === id) || MOCK_DOCTORS[0];
+  }
+
   try {
     const supabase = createClient();
     const { data, error } = await supabase
