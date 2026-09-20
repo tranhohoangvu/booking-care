@@ -9,8 +9,61 @@ export async function updateSession(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key';
 
-  // If using placeholder credentials, allow static browsing
+  const pathname = request.nextUrl.pathname;
+
+  // If using placeholder credentials, check local demo auth cookie so user can test login gates
   if (supabaseUrl.includes('placeholder')) {
+    const demoUserCookie = request.cookies.get('bookingcare_demo_user')?.value;
+    let demoRole: string | null = null;
+    if (demoUserCookie) {
+      try {
+        const parsed = JSON.parse(demoUserCookie);
+        demoRole = parsed.role;
+      } catch {
+        demoRole = null;
+      }
+    }
+
+    // Protect Admin routes
+    if (pathname.startsWith('/admin')) {
+      if (!demoRole) {
+        const url = request.nextUrl.clone();
+        url.pathname = '/login';
+        url.searchParams.set('redirect', pathname);
+        return NextResponse.redirect(url);
+      }
+      if (demoRole !== 'ADMIN') {
+        const url = request.nextUrl.clone();
+        url.pathname = '/';
+        return NextResponse.redirect(url);
+      }
+    }
+
+    // Protect Doctor routes
+    if (pathname.startsWith('/doctor')) {
+      if (!demoRole) {
+        const url = request.nextUrl.clone();
+        url.pathname = '/login';
+        url.searchParams.set('redirect', pathname);
+        return NextResponse.redirect(url);
+      }
+      if (demoRole !== 'DOCTOR' && demoRole !== 'ADMIN') {
+        const url = request.nextUrl.clone();
+        url.pathname = '/';
+        return NextResponse.redirect(url);
+      }
+    }
+
+    // Protect Patient routes (/profile, /appointments)
+    if (pathname.startsWith('/profile') || pathname.startsWith('/appointments')) {
+      if (!demoRole) {
+        const url = request.nextUrl.clone();
+        url.pathname = '/login';
+        url.searchParams.set('redirect', pathname);
+        return NextResponse.redirect(url);
+      }
+    }
+
     return supabaseResponse;
   }
 
@@ -31,13 +84,10 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  // IMPORTANT: Avoid using getSession() in Server Components / Middleware as it reads from cookies without verification.
-  // Instead, use getUser() which verifies the JWT with Supabase Auth.
+  // Verify auth session
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
-  const pathname = request.nextUrl.pathname;
 
   // Protect Admin routes
   if (pathname.startsWith('/admin')) {
@@ -85,7 +135,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Protect Patient private routes (appointments, profile)
-  if (pathname.startsWith('/appointments') || pathname.startsWith('/patient/profile')) {
+  if (pathname.startsWith('/appointments') || pathname.startsWith('/profile')) {
     if (!user) {
       const url = request.nextUrl.clone();
       url.pathname = '/login';

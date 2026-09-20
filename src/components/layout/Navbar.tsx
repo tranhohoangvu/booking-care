@@ -71,7 +71,26 @@ export function Navbar() {
             fullName,
           });
         } else {
-          setUser(null);
+          // Check demo user cookie for local/offline testing
+          const demoCookie = typeof document !== 'undefined'
+            ? document.cookie.split('; ').find((row) => row.startsWith('bookingcare_demo_user='))
+            : null;
+
+          if (demoCookie) {
+            try {
+              const parsed = JSON.parse(decodeURIComponent(demoCookie.split('=')[1]));
+              setUser({
+                id: parsed.id,
+                email: parsed.email,
+                role: parsed.role,
+                fullName: parsed.fullName,
+              });
+            } catch {
+              setUser(null);
+            }
+          } else {
+            setUser(null);
+          }
         }
       } catch (err) {
         console.error('Error loading user session:', err);
@@ -92,6 +111,10 @@ export function Navbar() {
   }, []);
 
   const handleLogout = async () => {
+    // Clear demo cookie
+    if (typeof document !== 'undefined') {
+      document.cookie = 'bookingcare_demo_user=; path=/; max-age=0';
+    }
     await supabase.auth.signOut();
     setUser(null);
     setIsDropdownOpen(false);

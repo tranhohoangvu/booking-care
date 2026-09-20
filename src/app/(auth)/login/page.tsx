@@ -56,6 +56,28 @@ function LoginForm() {
     }
   };
 
+  const handleDemoLogin = (role: 'PATIENT' | 'DOCTOR' | 'ADMIN', fullName: string, demoEmail: string) => {
+    const demoPayload = {
+      id: `demo-${role.toLowerCase()}-id`,
+      email: demoEmail,
+      role,
+      fullName,
+    };
+    // Set cookie for 7 days
+    document.cookie = `bookingcare_demo_user=${encodeURIComponent(JSON.stringify(demoPayload))}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`;
+    
+    // Auto redirect based on role or searchParams
+    let target = redirectPath;
+    if (target === '/') {
+      if (role === 'DOCTOR') target = '/doctor/profile';
+      else if (role === 'ADMIN') target = '/admin';
+      else target = '/profile';
+    }
+
+    router.push(target);
+    router.refresh();
+  };
+
   return (
     <Card className="shadow-[0px_12px_32px_-16px_oklch(0.2_0.012_250_/_0.14),0px_1px_2px_0px_oklch(0.2_0.012_250_/_0.06)] border-[oklch(0.86_0.014_90)] bg-white rounded-[20px]">
       <form onSubmit={handleLogin}>
@@ -106,7 +128,7 @@ function LoginForm() {
         </CardContent>
 
         <CardFooter className="flex flex-col gap-3 pt-2">
-          <Button type="submit" className="w-full h-10 text-xs font-bold rounded-[12px]" disabled={loading}>
+          <Button type="submit" className="w-full h-10 text-xs font-bold rounded-full bg-[#22c55e] hover:bg-[#16a34a] text-white" disabled={loading}>
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" strokeWidth={1.75} /> Đang xác thực...
@@ -116,11 +138,41 @@ function LoginForm() {
             )}
           </Button>
 
-          <div className="text-center text-xs text-[oklch(0.28_0.014_250)]">
+          <div className="text-center text-xs text-gray-600">
             Chưa có tài khoản?{' '}
-            <Link href="/register" className="font-semibold text-[oklch(0.54_0.19_240)] hover:underline">
+            <Link href="/register" className="font-semibold text-[#22c55e] hover:underline">
               Đăng ký tài khoản mới
             </Link>
+          </div>
+
+          {/* Quick Demo Role Switcher for Testing RBAC */}
+          <div className="w-full pt-4 mt-2 border-t border-gray-200">
+            <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider text-center mb-2.5">
+              Đăng nhập nhanh để kiểm tra phân quyền (RBAC)
+            </p>
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <button
+                type="button"
+                onClick={() => handleDemoLogin('PATIENT', 'Nguyễn Văn A', 'patient.demo@bookingcare.vn')}
+                className="py-2 px-1 rounded-xl bg-gray-100 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 border border-gray-200 text-gray-700 font-semibold text-[11px] transition-all text-center"
+              >
+                Bệnh nhân
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDemoLogin('DOCTOR', 'PGS.TS.BS Nguyễn Văn Liệu', 'doctor.lieu@bookingcare.vn')}
+                className="py-2 px-1 rounded-xl bg-gray-100 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 border border-gray-200 text-gray-700 font-semibold text-[11px] transition-all text-center"
+              >
+                Bác sĩ
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDemoLogin('ADMIN', 'Quản trị viên', 'admin@bookingcare.vn')}
+                className="py-2 px-1 rounded-xl bg-gray-100 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 border border-gray-200 text-gray-700 font-semibold text-[11px] transition-all text-center"
+              >
+                Admin
+              </button>
+            </div>
           </div>
         </CardFooter>
       </form>
