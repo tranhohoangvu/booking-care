@@ -47,23 +47,44 @@ booking-care/
 ├── src/
 │   ├── app/
 │   │   ├── (auth)/
-│   │   │   ├── login/page.tsx          # Login with Suspense boundary
+│   │   │   ├── login/page.tsx          # Login with quick role-switcher (Patient, Doctor, Admin)
 │   │   │   ├── register/page.tsx       # Registration with Patient/Doctor role selection
 │   │   │   └── forgot-password/page.tsx# Password reset request
 │   │   ├── auth/callback/route.ts      # OAuth / email verification callback
+│   │   ├── doctor/                     # Protected Doctor Portal
+│   │   │   ├── profile/page.tsx        # Doctor professional profile & credentials editor
+│   │   │   └── schedule/page.tsx       # Daily schedule board, slot toggle & bulk generator
+│   │   ├── doctors/                    # Public Doctor Directory
+│   │   │   ├── page.tsx                # Multi-criteria search (keyword, specialty, clinic, price, sort)
+│   │   │   └── [id]/page.tsx           # Doctor profile details & interactive slot booking
+│   │   ├── specialties/                # Specialties Catalog
+│   │   │   ├── page.tsx                # Realtime specialty directory
+│   │   │   └── [slug]/page.tsx         # Specialty details & associated doctors
+│   │   ├── clinics/                    # Healthcare Facilities Catalog
+│   │   │   ├── page.tsx                # Clinics & hospitals directory with region filter
+│   │   │   └── [slug]/page.tsx         # Clinic overview & working staff
+│   │   ├── profile/page.tsx            # Patient personal profile management
 │   │   ├── globals.css                 # Custom medical theme & design tokens
 │   │   ├── layout.tsx                  # Root layout with Inter font & Navbar/Footer
-│   │   └── page.tsx                    # Hero Landing Page with search & highlights
+│   │   └── page.tsx                    # Dynamic Landing Page connected to services layer
 │   ├── components/
+│   │   ├── doctor/
+│   │   │   └── DoctorSubnav.tsx        # Doctor portal sub-navigation tabs
 │   │   ├── layout/
-│   │   │   ├── Navbar.tsx              # Dynamic session-aware header
+│   │   │   ├── Navbar.tsx              # Dynamic session-aware header with role badge
 │   │   │   └── Footer.tsx              # Medical disclaimers & contact info
 │   │   └── ui/                         # Reusable UI primitives (Button, Input, Card)
 │   ├── lib/
+│   │   ├── services/                   # Application Data & Business Logic Layer
+│   │   │   ├── doctors.ts              # Doctor search, filters, and detail queries
+│   │   │   ├── specialties.ts          # Specialty catalog services
+│   │   │   ├── clinics.ts              # Hospital & clinic catalog services
+│   │   │   ├── profiles.ts             # Patient & Doctor profile CRUD
+│   │   │   └── schedules.ts            # Schedule management, bulk generator & toggling
 │   │   ├── supabase/
-│   │   │   ├── client.ts               # Browser Supabase client (@supabase/ssr)
+│   │   │   ├── client.ts               # Browser client with fast offline fallback detection
 │   │   │   ├── server.ts               # Server Supabase client with cookies
-│   │   │   └── middleware.ts           # Session refresher & role guard
+│   │   │   └── middleware.ts           # Session refresher & RBAC role guard
 │   │   └── utils.ts                    # cn(), formatCurrency(), formatDate()
 │   ├── middleware.ts                   # Next.js Route Guard Middleware
 │   └── types/
@@ -71,7 +92,7 @@ booking-care/
 ├── supabase/
 │   └── migrations/
 │       ├── 001_initial_schema.sql      # Tables, Enums, Constraints, Triggers & RLS
-│       └── 002_seed_data.sql           # Initial 8 Specialties & 4 Clinics
+│       └── 002_seed_data.sql           # Seed Specialties, Clinics, Doctors & Schedules
 ├── .env.example
 ├── package.json
 └── README.md
@@ -84,7 +105,7 @@ booking-care/
 ### 1. Prerequisites
 - **Node.js**: `v20+` or `v24+`
 - **npm** or **pnpm**
-- A free [Supabase](https://supabase.com) account
+- A free [Supabase](https://supabase.com) account (or use built-in offline mock mode)
 
 ### 2. Clone and Install Dependencies
 
@@ -110,11 +131,14 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-public-key
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
+> [!TIP]
+> The app includes a zero-latency **Offline Mock Engine**. If Supabase credentials remain unconfigured or set to placeholders, all features run offline at sub-second speeds.
+
 ### 4. Apply Database Migrations
 
 1. Go to your **Supabase Dashboard** $\to$ **SQL Editor**.
-2. Run the script in [`supabase/migrations/001_initial_schema.sql`](supabase/migrations/001_initial_schema.sql).
-3. Run the seed data script in [`supabase/migrations/002_seed_data.sql`](supabase/migrations/002_seed_data.sql).
+2. Run [`supabase/migrations/001_initial_schema.sql`](supabase/migrations/001_initial_schema.sql).
+3. Run [`supabase/migrations/002_seed_data.sql`](supabase/migrations/002_seed_data.sql).
 
 ### 5. Run Development Server
 
@@ -122,7 +146,7 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
@@ -132,10 +156,22 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
   - Next.js 15, TypeScript, Tailwind CSS, and Inter font.
   - PostgreSQL schema with RLS, triggers, anti-race-condition indexes, and seed data.
   - Supabase SSR Auth, session middleware, login, registration, and responsive landing page.
-- [ ] **Sprint 2: Profile & Master Data Management**
-  - Patient & Doctor profiles, specialties directory, and clinic listings.
-- [ ] **Sprint 3: Doctor Directory, Search & Filtering**
-- [ ] **Sprint 4: Doctor Schedule Management & Bulk Slot Generator**
+- [x] **Sprint 2: Profile & Master Data Management**
+  - Role-Based Access Control (RBAC) route guarding (`/profile`, `/doctor/*`, `/admin/*`).
+  - Patient personal profile management (`/profile`).
+  - Doctor credentials & bio management (`/doctor/profile`).
+  - Specialties catalog & detail pages (`/specialties`, `/specialties/[slug]`).
+  - Healthcare facilities catalog with region filtering (`/clinics`, `/clinics/[slug]`).
+- [x] **Sprint 3: Doctor Directory, Search & Filtering**
+  - Multi-criteria search engine (`searchDoctors`): keyword, specialty, clinic, price range, and sort order.
+  - Public doctor search page (`/doctors`) with bidirectional 2-way URL params synchronization.
+  - Doctor detail page (`/doctors/[id]`) with interactive slot picker, pricing details, and verified patient reviews.
+- [x] **Sprint 4: Doctor Schedule Management & Bulk Slot Generator**
+  - Doctor schedule service (`/src/lib/services/schedules.ts`) with standard 30-min time slots.
+  - Daily & weekly schedule board (`/doctor/schedule`) categorized by Morning and Afternoon shifts.
+  - **Bulk Schedule Generator**: Multi-day range, day-of-week selection (Mon–Sun), shift presets, and preview.
+  - Slot toggling: Instant switching between `AVAILABLE` and `BLOCKED` with protection for `BOOKED` slots.
+  - Unified Doctor Portal sub-navigation bar (`DoctorSubnav`).
 - [ ] **Sprint 5: Appointment Booking Flow (Self & Relatives)**
 - [ ] **Sprint 6: Doctor Consultation Dashboard & Medical Notes**
 - [ ] **Sprint 7: Admin Control Panel & Analytics**
