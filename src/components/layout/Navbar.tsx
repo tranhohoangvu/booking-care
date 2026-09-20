@@ -14,9 +14,7 @@ import {
   X, 
   ShieldCheck, 
   Stethoscope, 
-  Building2,
-  PhoneCall,
-  Search
+  PhoneCall
 } from 'lucide-react';
 import type { UserRole } from '@/types/database.types';
 
@@ -108,36 +106,42 @@ export function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-200/80 bg-white/95 backdrop-blur-md supports-[backdrop-filter]:bg-white/85 transition-all">
+    <header className="sticky top-0 z-50 w-full border-b border-gray-200/60 bg-[#eef1f0]/80 backdrop-blur-md supports-[backdrop-filter]:bg-[#eef1f0]/70 transition-all">
       <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand Logo */}
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-600 text-white shadow-sm group-hover:bg-sky-700 transition-colors">
-              <HeartHandshake className="h-5 w-5" strokeWidth={1.75} />
+            {/* BookingCare Emerald Medical Icon */}
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#22c55e] to-[#16a34a] text-white shadow-sm transition-transform duration-200 group-hover:scale-105">
+              <svg className="h-5 w-5 fill-none stroke-current" viewBox="0 0 24 24" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                <path d="M12 7v6" />
+                <path d="M9 10h6" />
+              </svg>
             </div>
+            {/* Brand Name */}
             <div className="flex flex-col">
-              <span className="text-lg font-bold tracking-tight text-slate-900 leading-none">
-                Booking<span className="text-sky-600">Care</span>
+              <span className="text-[18px] font-extrabold tracking-tight text-[#1a2e24] leading-none">
+                Booking<span className="text-[#22c55e]">Care</span>
               </span>
-              <span className="text-[9px] font-semibold tracking-wider uppercase text-slate-500 mt-0.5">
+              <span className="text-[8.5px] font-bold tracking-[0.14em] uppercase text-gray-500 mt-1">
                 Chăm sóc y tế số
               </span>
             </div>
           </Link>
 
-          {/* Desktop Nav Links - Single Line Strict */}
-          <nav className="hidden md:flex items-center gap-1">
+          {/* Desktop Nav Links */}
+          <nav className="hidden md:flex items-center space-x-6 text-[14px]">
             {navLinks.map((link) => {
               const isActive = pathname.startsWith(link.href);
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+                  className={`font-medium transition-colors ${
                     isActive
-                      ? 'text-sky-700 bg-sky-50 font-semibold'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
+                      ? 'text-[#22c55e] font-semibold'
+                      : 'text-gray-700 hover:text-gray-900'
                   }`}
                 >
                   {link.label}
@@ -148,26 +152,26 @@ export function Navbar() {
         </div>
 
         {/* Right Section: Support Hotline & Auth Controls */}
-        <div className="hidden md:flex items-center gap-4">
-          <div className="flex items-center gap-1.5 text-xs text-slate-600 border-r border-slate-200 pr-4">
-            <PhoneCall className="w-3.5 h-3.5 text-sky-600" strokeWidth={1.75} />
-            <span className="text-slate-500">Hỗ trợ:</span>
-            <span className="font-semibold text-slate-800">1900 2805</span>
+        <div className="hidden md:flex items-center gap-4 text-[14px]">
+          <div className="flex items-center gap-1.5 text-xs text-gray-700 border-r border-gray-300 pr-4">
+            <PhoneCall className="w-3.5 h-3.5 text-[#22c55e]" strokeWidth={2} />
+            <span className="text-gray-500">Hỗ trợ:</span>
+            <span className="font-semibold text-gray-900">1900 2805</span>
           </div>
 
           {loading ? (
-            <div className="h-8 w-24 bg-slate-100 animate-pulse rounded-lg" />
+            <div className="h-8 w-24 bg-gray-200/60 animate-pulse rounded-full" />
           ) : user ? (
             <div className="relative">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center gap-2 py-1 px-2 rounded-full border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-all text-left"
+                className="flex items-center gap-2 py-1 px-3 rounded-full border border-gray-300 bg-white/80 hover:bg-white transition-all text-left"
               >
-                <div className="h-7 w-7 rounded-full bg-sky-600 text-white flex items-center justify-center font-bold text-[11px]">
+                <div className="h-6 w-6 rounded-full bg-[#22c55e] text-white flex items-center justify-center font-bold text-[11px]">
                   {user.fullName ? user.fullName.charAt(0).toUpperCase() : 'U'}
                 </div>
                 <div className="max-w-[110px]">
-                  <p className="text-xs font-semibold text-slate-800 truncate leading-none">
+                  <p className="text-xs font-semibold text-gray-900 truncate leading-none">
                     {user.fullName || user.email}
                   </p>
                 </div>
@@ -175,11 +179,11 @@ export function Navbar() {
 
               {/* Dropdown Menu */}
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-56 rounded-xl border border-slate-200/90 bg-white py-1.5 shadow-lg shadow-slate-200/50 animate-in fade-in-50 zoom-in-95">
-                  <div className="px-3.5 py-2 border-b border-slate-100">
-                    <p className="text-xs font-bold text-slate-800 truncate">{user.fullName}</p>
-                    <p className="text-[11px] text-slate-500 truncate">{user.email}</p>
-                    <span className="inline-block mt-1 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-sky-50 text-sky-700">
+                <div className="absolute right-0 mt-2 w-56 rounded-[12px] border border-[oklch(0.86_0.014_90)] bg-white py-1.5 shadow-[0px_12px_32px_-16px_oklch(0.2_0.012_250_/_0.14)] animate-in fade-in-50 zoom-in-95">
+                  <div className="px-3.5 py-2 border-b border-[oklch(0.86_0.014_90)]">
+                    <p className="text-xs font-bold text-[oklch(0.2_0.012_250)] truncate">{user.fullName}</p>
+                    <p className="text-[11px] text-[oklch(0.52_0.014_90)] truncate">{user.email}</p>
+                    <span className="inline-block mt-1 px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-[oklch(0.95_0.04_240)] text-[oklch(0.48_0.19_240)]">
                       {user.role === 'ADMIN' ? 'Quản trị viên' : user.role === 'DOCTOR' ? 'Bác sĩ' : 'Bệnh nhân'}
                     </span>
                   </div>
@@ -188,9 +192,9 @@ export function Navbar() {
                     <Link
                       href="/admin"
                       onClick={() => setIsDropdownOpen(false)}
-                      className="flex items-center gap-2 px-3.5 py-2 text-xs text-slate-700 hover:bg-sky-50 hover:text-sky-700"
+                      className="flex items-center gap-2 px-3.5 py-2 text-xs text-[oklch(0.28_0.014_250)] hover:bg-[oklch(0.95_0.04_240)] hover:text-[oklch(0.48_0.19_240)]"
                     >
-                      <ShieldCheck className="w-4 h-4 text-sky-600" strokeWidth={1.75} />
+                      <ShieldCheck className="w-4 h-4 text-[oklch(0.54_0.19_240)]" strokeWidth={1.75} />
                       Bảng điều khiển Admin
                     </Link>
                   )}
@@ -199,9 +203,9 @@ export function Navbar() {
                     <Link
                       href="/doctor/dashboard"
                       onClick={() => setIsDropdownOpen(false)}
-                      className="flex items-center gap-2 px-3.5 py-2 text-xs text-slate-700 hover:bg-sky-50 hover:text-sky-700"
+                      className="flex items-center gap-2 px-3.5 py-2 text-xs text-[oklch(0.28_0.014_250)] hover:bg-[oklch(0.95_0.04_240)] hover:text-[oklch(0.48_0.19_240)]"
                     >
-                      <Stethoscope className="w-4 h-4 text-sky-600" strokeWidth={1.75} />
+                      <Stethoscope className="w-4 h-4 text-[oklch(0.54_0.19_240)]" strokeWidth={1.75} />
                       Bàn làm việc Bác sĩ
                     </Link>
                   )}
@@ -209,22 +213,22 @@ export function Navbar() {
                   <Link
                     href="/appointments"
                     onClick={() => setIsDropdownOpen(false)}
-                    className="flex items-center gap-2 px-3.5 py-2 text-xs text-slate-700 hover:bg-sky-50 hover:text-sky-700"
+                    className="flex items-center gap-2 px-3.5 py-2 text-xs text-[oklch(0.28_0.014_250)] hover:bg-[oklch(0.95_0.04_240)] hover:text-[oklch(0.48_0.19_240)]"
                   >
-                    <Calendar className="w-4 h-4 text-slate-400" strokeWidth={1.75} />
+                    <Calendar className="w-4 h-4 text-[oklch(0.52_0.014_90)]" strokeWidth={1.75} />
                     Lịch hẹn đã đặt
                   </Link>
 
                   <Link
                     href="/profile"
                     onClick={() => setIsDropdownOpen(false)}
-                    className="flex items-center gap-2 px-3.5 py-2 text-xs text-slate-700 hover:bg-sky-50 hover:text-sky-700"
+                    className="flex items-center gap-2 px-3.5 py-2 text-xs text-[oklch(0.28_0.014_250)] hover:bg-[oklch(0.95_0.04_240)] hover:text-[oklch(0.48_0.19_240)]"
                   >
-                    <UserIcon className="w-4 h-4 text-slate-400" strokeWidth={1.75} />
+                    <UserIcon className="w-4 h-4 text-[oklch(0.52_0.014_90)]" strokeWidth={1.75} />
                     Hồ sơ bệnh nhân
                   </Link>
 
-                  <div className="my-1 border-t border-slate-100" />
+                  <div className="my-1 border-t border-[oklch(0.86_0.014_90)]" />
 
                   <button
                     onClick={handleLogout}
@@ -237,16 +241,18 @@ export function Navbar() {
               )}
             </div>
           ) : (
-            <div className="flex items-center gap-2">
-              <Link href="/login">
-                <Button variant="ghost" size="sm" className="h-8 px-3 text-xs font-medium">
-                  Đăng nhập
-                </Button>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/login"
+                className="text-gray-700 hover:text-gray-900 text-[14px] font-normal transition-colors px-2 py-1.5"
+              >
+                Đăng nhập
               </Link>
-              <Link href="/register">
-                <Button size="sm" className="h-8 px-3 text-xs font-semibold">
-                  Đăng ký
-                </Button>
+              <Link
+                href="/register"
+                className="px-5 py-2 border border-gray-400 rounded-full text-gray-900 hover:bg-white/80 text-[14px] font-normal transition-all"
+              >
+                Đăng ký
               </Link>
             </div>
           )}
@@ -256,7 +262,7 @@ export function Navbar() {
         <div className="flex md:hidden">
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-1.5 text-slate-600 hover:text-slate-900 rounded-lg"
+            className="p-1.5 text-[oklch(0.28_0.014_250)] hover:text-[oklch(0.2_0.012_250)] rounded-[12px]"
           >
             {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -265,37 +271,37 @@ export function Navbar() {
 
       {/* Mobile Drawer */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-3">
+        <div className="md:hidden border-t border-[oklch(0.86_0.014_90)] bg-white px-4 pt-3 pb-6 space-y-3">
           <div className="space-y-1">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-slate-700 hover:bg-sky-50 hover:text-sky-700"
+                className="flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-[12px] text-[oklch(0.28_0.014_250)] hover:bg-[oklch(0.95_0.04_240)] hover:text-[oklch(0.48_0.19_240)]"
               >
                 {link.label}
               </Link>
             ))}
           </div>
 
-          <div className="pt-3 border-t border-slate-100">
+          <div className="pt-3 border-t border-[oklch(0.86_0.014_90)]">
             {user ? (
               <div className="space-y-2">
                 <div className="px-3 py-1">
-                  <p className="text-xs font-bold text-slate-900">{user.fullName}</p>
-                  <p className="text-[11px] text-slate-500">{user.email}</p>
+                  <p className="text-xs font-bold text-[oklch(0.2_0.012_250)]">{user.fullName}</p>
+                  <p className="text-[11px] text-[oklch(0.52_0.014_90)]">{user.email}</p>
                 </div>
                 <Link
                   href="/appointments"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-2 px-3 py-2 text-xs text-slate-700 rounded-lg hover:bg-slate-50"
+                  className="flex items-center gap-2 px-3 py-2 text-xs text-[oklch(0.28_0.014_250)] rounded-[12px] hover:bg-[oklch(0.94_0.016_95)]"
                 >
-                  <Calendar className="w-4 h-4 text-slate-400" strokeWidth={1.75} /> Lịch hẹn đã đặt
+                  <Calendar className="w-4 h-4 text-[oklch(0.52_0.014_90)]" strokeWidth={1.75} /> Lịch hẹn đã đặt
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-rose-600 rounded-lg hover:bg-rose-50"
+                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-rose-600 rounded-[12px] hover:bg-rose-50"
                 >
                   <LogOut className="w-4 h-4" strokeWidth={1.75} /> Đăng xuất
                 </button>

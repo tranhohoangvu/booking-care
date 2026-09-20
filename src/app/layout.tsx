@@ -33,7 +33,19 @@ export default function RootLayout({
       lang="vi"
       className={`${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-slate-50/50 text-slate-900 font-sans">
+      <body className="min-h-full flex flex-col antialiased bg-transparent relative selection:bg-[#22c55e]/20 selection:text-[#1a2e24]">
+        {/* Fixed Background Video Container */}
+        <div className="fixed inset-0 w-full h-full -z-10 overflow-hidden bg-[#eef1f0] pointer-events-none">
+          <video
+            className="w-full h-full object-cover"
+            autoPlay
+            loop
+            muted
+            playsInline
+            src="https://cdn.sceneai.art/Hero%20Section%20Video/aa476a86-3c53-4229-b946-84f699108e53.mp4"
+          />
+        </div>
+
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
