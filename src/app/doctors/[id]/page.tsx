@@ -79,12 +79,8 @@ function DoctorDetailContent() {
   }, [doctorId]);
 
   const handleBookNow = () => {
-    // Navigate to appointment booking flow (Sprint 5) or show instant confirmation notice
-    setBookingNotice(
-      `Đã chọn khung giờ ${selectedSlot} ngày ${
-        upcomingDates.find((d) => d.key === selectedDate)?.label || selectedDate
-      }. Quy trình điền thông tin đặt lịch khám sẽ tiếp tục ở Sprint 5!`
-    );
+    if (!doctor) return;
+    router.push(`/booking?doctorId=${doctor.id}&date=${selectedDate}&slot=${selectedSlot}`);
   };
 
   if (loading) {

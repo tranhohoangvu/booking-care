@@ -63,6 +63,11 @@ booking-care/
 │   │   ├── clinics/                    # Healthcare Facilities Catalog
 │   │   │   ├── page.tsx                # Clinics & hospitals directory with region filter
 │   │   │   └── [slug]/page.tsx         # Clinic overview & working staff
+│   │   ├── booking/                    # Appointment Booking Flow
+│   │   │   ├── page.tsx                # Booking form (Self/Relative, symptoms, payment method)
+│   │   │   └── success/[id]/page.tsx   # Electronic booking receipt with QR code check-in
+│   │   ├── appointments/               # Patient Appointments Dashboard
+│   │   │   └── page.tsx                # Status tabs, receipt view & slot-releasing cancellation
 │   │   ├── profile/page.tsx            # Patient personal profile management
 │   │   ├── globals.css                 # Custom medical theme & design tokens
 │   │   ├── layout.tsx                  # Root layout with Inter font & Navbar/Footer
@@ -76,6 +81,7 @@ booking-care/
 │   │   └── ui/                         # Reusable UI primitives (Button, Input, Card)
 │   ├── lib/
 │   │   ├── services/                   # Application Data & Business Logic Layer
+│   │   │   ├── appointments.ts         # Atomic slot lock, booking & cancellation service
 │   │   │   ├── doctors.ts              # Doctor search, filters, and detail queries
 │   │   │   ├── specialties.ts          # Specialty catalog services
 │   │   │   ├── clinics.ts              # Hospital & clinic catalog services
@@ -172,7 +178,13 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
   - **Bulk Schedule Generator**: Multi-day range, day-of-week selection (Mon–Sun), shift presets, and preview.
   - Slot toggling: Instant switching between `AVAILABLE` and `BLOCKED` with protection for `BOOKED` slots.
   - Unified Doctor Portal sub-navigation bar (`DoctorSubnav`).
-- [ ] **Sprint 5: Appointment Booking Flow (Self & Relatives)**
+- [x] **Sprint 5: Appointment Booking Flow (Self & Relatives)**
+  - Appointment booking service (`/src/lib/services/appointments.ts`) with atomic slot locking and anti-race condition protection.
+  - Interactive appointment booking page (`/booking?doctorId=...&date=...&slot=...`) with Suspense wrapper.
+  - Self vs. Relative booking toggle (`booking_for`), patient profile auto-fill, and symptom description.
+  - Payment options: Cash at hospital counter (`CASH`) or instant mock online payment (`ONLINE`).
+  - Electronic booking receipt (`/booking/success/[id]`) with copyable appointment code, check-in QR code, and preparation guide.
+  - Patient appointments management dashboard (`/appointments`) with status tabs (`ALL`, `UPCOMING`, `COMPLETED`, `CANCELLED`) and slot-releasing cancellation modal.
 - [ ] **Sprint 6: Doctor Consultation Dashboard & Medical Notes**
 - [ ] **Sprint 7: Admin Control Panel & Analytics**
 - [ ] **Sprint 8: Reviews, Realtime Updates & Deployment**
