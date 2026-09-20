@@ -2,33 +2,33 @@
 
 :root {
   --background: #f8fafc;
-  --foreground: #0f172a;
+  --foreground: #090d16;
   
   --primary: #0284c7;
   --primary-hover: #0369a1;
   --primary-foreground: #ffffff;
   
-  --secondary: #e0f2fe;
+  --secondary: #f0f9ff;
   --secondary-foreground: #0369a1;
   
-  --accent: #10b981;
+  --accent: #059669;
   --accent-foreground: #ffffff;
   
   --muted: #f1f5f9;
   --muted-foreground: #64748b;
   
   --card: #ffffff;
-  --card-foreground: #0f172a;
+  --card-foreground: #090d16;
   
   --border: #e2e8f0;
   --input: #e2e8f0;
   --ring: #0284c7;
   
-  --radius: 0.75rem;
+  --radius: 1rem;
 }
 
 @theme inline {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
@@ -50,24 +50,33 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  letter-spacing: -0.01em;
 }
 
-/* Custom Scrollbar */
+/* Subtle dot grid for premium medical structure */
+.bg-grid-pattern {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(226, 232, 240, 0.4) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(226, 232, 240, 0.4) 1px, transparent 1px);
+}
+
+/* Custom refined scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
-  border-radius: 4px;
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
