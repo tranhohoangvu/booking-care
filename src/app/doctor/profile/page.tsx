@@ -22,6 +22,7 @@ import { getAllSpecialties, type SpecialtyWithCount } from '@/lib/services/speci
 import { getAllClinics, type ClinicWithStats } from '@/lib/services/clinics';
 import type { DoctorProfile } from '@/types/database.types';
 import { Button } from '@/components/ui/button';
+import { DoctorSubnav } from '@/components/doctor/DoctorSubnav';
 
 export default function DoctorProfilePage() {
   const router = useRouter();
@@ -166,14 +167,10 @@ export default function DoctorProfilePage() {
 
   return (
     <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-      {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-xs text-gray-500 mb-6">
-        <Link href="/" className="hover:text-[#22c55e] flex items-center gap-1 transition-colors">
-          <ArrowLeft className="w-3.5 h-3.5" /> Trang chủ
-        </Link>
-        <span>/</span>
-        <span className="text-[#1a2e24] font-semibold">Hồ sơ Bác sĩ</span>
-      </div>
+      <DoctorSubnav
+        title="Hồ sơ chuyên môn Bác sĩ"
+        subtitle="Cập nhật học vị, chuyên khoa, bệnh viện công tác, biểu phí khám và giới thiệu tiểu sử của bạn."
+      />
 
       <div className="glass-card rounded-[28px] p-8 md:p-10 relative overflow-hidden">
         {/* Header Title */}
